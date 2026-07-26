@@ -1,3 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <SpecialRequests>
+  <SpecialRequest>
+    <Id>1</Id>
+    <BookingId>1</BookingId>
+    <RequestType>Wheelchair Assistance</RequestType>
+    <Description>Need wheelchair assistance at departure station.</Description>
+    <RequestDate>2026-07-26</RequestDate>
+    <Status>Pending</Status>
+  </SpecialRequest>
 </SpecialRequests>
