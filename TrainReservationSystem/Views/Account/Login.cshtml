@@ -1,65 +1,71 @@
-using System.Security.Claims;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using TrainReservationSystem.Models;
-using TrainReservationSystem.Services;
+@model TrainReservationSystem.Models.LoginViewModel
 
-namespace TrainReservationSystem.Controllers;
+@{
+    ViewData["Title"] = "Login";
+    Layout = "_Layout";
+}
 
-[AllowAnonymous]
-public class AccountController : Controller
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+
+            <div class="card shadow-lg border-0 rounded-4">
+
+                <div class="card-header bg-primary text-white text-center">
+                    <h2>Train Reservation System</h2>
+                    <p class="mb-0">Sign in to continue</p>
+                </div>
+
+                <div class="card-body">
+
+                    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+                    {
+                        <div class="alert alert-danger">
+                            @Model.ErrorMessage
+                        </div>
+                    }
+
+                    <form asp-action="Login" method="post">
+
+                        @Html.AntiForgeryToken()
+
+                        <div class="mb-3">
+                            <label asp-for="Username" class="form-label"></label>
+                            <input asp-for="Username" class="form-control" />
+                            <span asp-validation-for="Username" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Password" class="form-label"></label>
+                            <input asp-for="Password" class="form-control" />
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100">
+                            Login
+                        </button>
+
+                    </form>
+
+                    <hr />
+
+                    <div class="text-center">
+                        <small>
+                            <strong>Demo Accounts</strong><br />
+                            admin / Password123<br />
+                            staff / Train@123
+                        </small>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts
 {
-    private readonly AuthService _authService;
-
-    public AccountController(AuthService authService)
-    {
-        _authService = authService;
-    }
-
-    [HttpGet]
-    public IActionResult Login()
-    {
-        return View(new LoginViewModel());
-    }
-
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Login(LoginViewModel model)
-    {
-        if (!ModelState.IsValid)
-            return View(model);
-
-        if (!_authService.ValidateUser(model.Username, model.Password))
-        {
-            model.ErrorMessage = "Invalid username or password.";
-            return View(model);
-        }
-
-        var claims = new List<Claim>
-        {
-            new Claim(ClaimTypes.Name, _authService.GetDisplayName(model.Username))
-        };
-
-        var identity = new ClaimsIdentity(
-            claims,
-            CookieAuthenticationDefaults.AuthenticationScheme);
-
-        var principal = new ClaimsPrincipal(identity);
-
-        await HttpContext.SignInAsync(
-            CookieAuthenticationDefaults.AuthenticationScheme,
-            principal);
-
-        return RedirectToAction("Index", "Home");
-    }
-
-    public async Task<IActionResult> Logout()
-    {
-        await HttpContext.SignOutAsync(
-            CookieAuthenticationDefaults.AuthenticationScheme);
-
-        return RedirectToAction(nameof(Login));
-    }
+    <partial name="_ValidationScriptsPartial" />
 }
