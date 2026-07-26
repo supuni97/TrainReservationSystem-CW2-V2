@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Text;
 using TrainReservationSystem.Services;
 
 namespace TrainReservationSystem.Controllers;
 
+[Authorize]
 public class ReportController : Controller
 {
     private readonly ReportService _reportService;

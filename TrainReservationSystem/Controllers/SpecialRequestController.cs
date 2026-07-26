@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TrainReservationSystem.Models;
 using TrainReservationSystem.Services.Api;
 
 namespace TrainReservationSystem.Controllers;
 
+[Authorize]
 public class SpecialRequestController : Controller
 {
    

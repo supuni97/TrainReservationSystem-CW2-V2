@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using TrainReservationSystem.Models.ViewModels;
@@ -5,6 +6,7 @@ using TrainReservationSystem.Services;
 
 namespace TrainReservationSystem.Controllers;
 
+[Authorize]
 public class ChatbotController : Controller
 {
     private readonly ChatbotService _chatbotService;
