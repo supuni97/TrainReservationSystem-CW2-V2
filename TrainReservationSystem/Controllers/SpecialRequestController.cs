@@ -1,27 +1,26 @@
 using Microsoft.AspNetCore.Mvc;
 using TrainReservationSystem.Models;
-using TrainReservationSystem.Services;
 using TrainReservationSystem.Services.Api;
 
 namespace TrainReservationSystem.Controllers;
 
 public class SpecialRequestController : Controller
 {
-    private readonly SpecialRequestService _specialRequestService;
+   
+private readonly ISpecialRequestApiService _specialRequestApiService;
 private readonly IBookingApiService _bookingApiService;
 
-    public SpecialRequestController(
-          SpecialRequestService specialRequestService,
+public SpecialRequestController(
+    ISpecialRequestApiService specialRequestApiService,
     IBookingApiService bookingApiService)
 {
-    _specialRequestService = specialRequestService;
+    _specialRequestApiService = specialRequestApiService;
     _bookingApiService = bookingApiService;
 }
 
-
     public async Task<IActionResult> Index()
     {
-        return View(await _specialRequestService.GetAll());
+        return View(await _specialRequestApiService.GetAll());
     }
 
 
@@ -29,7 +28,7 @@ private readonly IBookingApiService _bookingApiService;
     public async Task<IActionResult> Details(int id)
     {
         var request =
-            await _specialRequestService.GetById(id);
+            await _specialRequestApiService.GetById(id);
 
 
         if (request == null)
@@ -63,7 +62,7 @@ private readonly IBookingApiService _bookingApiService;
 
 
         var requests =
-            await _specialRequestService.GetAll();
+            await _specialRequestApiService.GetAll();
 
 
         if (requests.Any(r =>
@@ -83,7 +82,7 @@ private readonly IBookingApiService _bookingApiService;
 
 
 
-        await _specialRequestService.Add(request);
+        await _specialRequestApiService.Add(request);
 
 
 
@@ -102,7 +101,7 @@ private readonly IBookingApiService _bookingApiService;
     public async Task<IActionResult> Edit(int id)
     {
         var request =
-            await _specialRequestService.GetById(id);
+            await _specialRequestApiService.GetById(id);
 
 
         if (request == null)
@@ -132,7 +131,7 @@ private readonly IBookingApiService _bookingApiService;
 
 
         var requests =
-            await _specialRequestService.GetAll();
+            await _specialRequestApiService.GetAll();
 
 
 
@@ -157,7 +156,7 @@ private readonly IBookingApiService _bookingApiService;
 
 
         var existing =
-            await _specialRequestService.GetById(request.Id);
+            await _specialRequestApiService.GetById(request.Id);
 
 
 
@@ -166,7 +165,7 @@ private readonly IBookingApiService _bookingApiService;
 
 
 
-        await _specialRequestService.Update(request);
+        await _specialRequestApiService.Update(request);
 
 
 
@@ -185,7 +184,7 @@ private readonly IBookingApiService _bookingApiService;
     public async Task<IActionResult> Delete(int id)
     {
         var request =
-            await _specialRequestService.GetById(id);
+            await _specialRequestApiService.GetById(id);
 
 
 
@@ -206,7 +205,7 @@ private readonly IBookingApiService _bookingApiService;
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
         var request =
-            await _specialRequestService.GetById(id);
+            await _specialRequestApiService.GetById(id);
 
 
 
@@ -215,7 +214,7 @@ private readonly IBookingApiService _bookingApiService;
 
 
 
-        await _specialRequestService.Delete(id);
+        await _specialRequestApiService.Delete(id);
 
 
 

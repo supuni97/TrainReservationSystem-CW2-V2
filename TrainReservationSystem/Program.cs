@@ -28,8 +28,13 @@ builder.Services.AddHttpClient<IBookingApiService, BookingApiService>(client =>
     client.BaseAddress = new Uri("http://localhost:5141/");
 });
 
-// Application Services (still local)
-builder.Services.AddScoped<SpecialRequestService>();
+//Special Request Microservice
+builder.Services.AddHttpClient<ISpecialRequestApiService, SpecialRequestApiService>(client =>
+{
+    client.BaseAddress = new Uri("http://localhost:5293/");
+});
+
+// Application Services
 builder.Services.AddScoped<ReportService>();
 builder.Services.AddScoped<ChatbotService>();
 
