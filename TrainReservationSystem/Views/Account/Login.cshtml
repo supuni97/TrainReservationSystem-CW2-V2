@@ -25,37 +25,29 @@
                         </div>
                     }
 
-                    <form asp-action="Login" method="post">
+                   <form asp-action="Login" method="post">
 
-                        @Html.AntiForgeryToken()
+    @Html.AntiForgeryToken()
 
-                        <div class="mb-3">
-                            <label asp-for="Username" class="form-label"></label>
-                            <input asp-for="Username" class="form-control" />
-                            <span asp-validation-for="Username" class="text-danger"></span>
-                        </div>
+    <div class="mb-3">
+        <label asp-for="Username" class="form-label"></label>
+        <input asp-for="Username" class="form-control" />
+        <span asp-validation-for="Username" class="text-danger"></span>
+    </div>
 
-                        <div class="mb-3">
-                            <label asp-for="Password" class="form-label"></label>
-                            <input asp-for="Password" class="form-control" />
-                            <span asp-validation-for="Password" class="text-danger"></span>
-                        </div>
+    <div class="mb-3">
+        <label asp-for="Password" class="form-label"></label>
+        <input asp-for="Password" class="form-control" />
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
 
-                        <button type="submit" class="btn btn-primary w-100">
-                            Login
-                        </button>
+    <button type="submit" class="btn btn-primary w-100">
+        Login
+    </button>
 
-                    </form>
+</form>
 
                     <hr />
-
-                    <div class="text-center">
-                        <small>
-                            <strong>Demo Accounts</strong><br />
-                            admin / Password123<br />
-                            staff / Train@123
-                        </small>
-                    </div>
 
                 </div>
 

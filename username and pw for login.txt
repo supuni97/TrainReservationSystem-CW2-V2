@@ -1,0 +1,3 @@
+username	Password	Role
+admin	        Password123	Administrator
+staff	        Train@123	Staff
