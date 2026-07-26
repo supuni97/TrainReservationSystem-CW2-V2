@@ -1328,8 +1328,14 @@ async function exportPdf(sectionId)
         heightLeft -= pageHeight;
     }
 
-    pdf.save("WeeklyReport.pdf");
-}
+    const weekStart = "@Model.WeekStartDate.ToString("yyyyMMdd")";
+
+const fileName =
+    sectionId === "dailySection"
+        ? `DailyReport_${weekStart}.pdf`
+        : `WeeklyReport_${weekStart}.pdf`;
+
+pdf.save(fileName);
 
 
 /* =========================
