@@ -4,13 +4,13 @@ namespace SpecialRequest.Api.Repositories;
 
 public interface ISpecialRequestRepository
 {
-    IEnumerable<SpecialRequest> GetAll();
+    IEnumerable<SpecialRequestModel> GetAll();
 
-    SpecialRequest? GetById(int id);
+    SpecialRequestModel? GetById(int id);
 
-    SpecialRequest Add(SpecialRequest request);
+    SpecialRequestModel Add(SpecialRequestModel request);
 
-    bool Update(SpecialRequest request);
+    bool Update(SpecialRequestModel request);
 
     bool Delete(int id);
 }

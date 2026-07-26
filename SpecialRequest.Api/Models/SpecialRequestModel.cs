@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SpecialRequest.Api.Models;
 
-public class SpecialRequest
+public class SpecialRequestModel
 {
     public int Id { get; set; }
 

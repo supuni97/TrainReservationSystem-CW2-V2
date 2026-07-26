@@ -12,6 +12,7 @@ public class XmlSpecialRequestRepository : ISpecialRequestRepository
         _filePath = Path.Combine(AppContext.BaseDirectory, "Data", "SpecialRequests.xml");
 
         var directory = Path.GetDirectoryName(_filePath);
+
         if (!Directory.Exists(directory))
         {
             Directory.CreateDirectory(directory!);
@@ -27,30 +28,32 @@ public class XmlSpecialRequestRepository : ISpecialRequestRepository
         }
     }
 
-    public IEnumerable<SpecialRequest> GetAll()
+    public IEnumerable<SpecialRequestModel> GetAll()
     {
         var document = XDocument.Load(_filePath);
 
         return document.Root!
             .Elements("SpecialRequest")
-            .Select(x => new SpecialRequest
+            .Select(x => new SpecialRequestModel
             {
                 Id = (int)x.Element("Id")!,
                 BookingId = (int)x.Element("BookingId")!,
                 RequestType = (string?)x.Element("RequestType") ?? "",
                 Description = (string?)x.Element("Description") ?? "",
-                RequestDate = DateTime.Parse((string?)x.Element("RequestDate") ?? DateTime.Today.ToString("yyyy-MM-dd")),
+                RequestDate = DateTime.Parse(
+                    (string?)x.Element("RequestDate") ??
+                    DateTime.Today.ToString("yyyy-MM-dd")),
                 Status = (string?)x.Element("Status") ?? "Pending"
             })
             .ToList();
     }
 
-    public SpecialRequest? GetById(int id)
+    public SpecialRequestModel? GetById(int id)
     {
         return GetAll().FirstOrDefault(r => r.Id == id);
     }
 
-    public SpecialRequest Add(SpecialRequest request)
+    public SpecialRequestModel Add(SpecialRequestModel request)
     {
         var document = XDocument.Load(_filePath);
 
@@ -78,7 +81,7 @@ public class XmlSpecialRequestRepository : ISpecialRequestRepository
         return request;
     }
 
-    public bool Update(SpecialRequest request)
+    public bool Update(SpecialRequestModel request)
     {
         var document = XDocument.Load(_filePath);
 
