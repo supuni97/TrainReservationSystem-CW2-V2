@@ -6,11 +6,6 @@ using TrainReservationSystem.Services.Api;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Database
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(
-        builder.Configuration.GetConnectionString("DefaultConnection")));
-
 // MVC
 builder.Services.AddControllersWithViews();
 
@@ -54,12 +49,6 @@ builder.Services.AddScoped<ChatbotService>();
 builder.Services.AddScoped<AuthService>();
 
 var app = builder.Build();
-
-using (var scope = app.Services.CreateScope())
-{
-    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    DbInitializer.Seed(context);
-}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
