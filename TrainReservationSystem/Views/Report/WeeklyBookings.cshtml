@@ -1295,36 +1295,46 @@ async function exportPdf(sectionId)
     const element = document.getElementById(sectionId);
 
     const canvas = await html2canvas(element, {
-        scale: 2,
-        useCORS: true,
-        backgroundColor: "#ffffff"
-    });
+    scale: 2,
+    useCORS: true,
+    backgroundColor: "#ffffff",
+    scrollX: 0,
+    scrollY: -window.scrollY,
+    windowWidth: document.documentElement.scrollWidth
+});
 
     const imgData = canvas.toDataURL("image/png");
 
     const pdf = new jsPDF("p", "mm", "a4");
 
-    const pageWidth = pdf.internal.pageSize.getWidth();
-    const pageHeight = pdf.internal.pageSize.getHeight();
+const pageWidth = pdf.internal.pageSize.getWidth();
+const pageHeight = pdf.internal.pageSize.getHeight();
 
-    const imgWidth = pageWidth;
-    const imgHeight = canvas.height * imgWidth / canvas.width;
+const margin = 12;
+
+const imgWidth = pageWidth - (margin * 2);
+const imgHeight = canvas.height * imgWidth / canvas.width;
+    pdf.setDrawColor(210);
+pdf.rect(
+    margin - 2,
+    margin - 2,
+    pageWidth - ((margin - 2) * 2),
+    pageHeight - ((margin - 2) * 2)
+);
 
     let heightLeft = imgHeight;
-    let position = 0;
+   let position = margin;
 
-    pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-
+pdf.addImage(imgData, "PNG", margin, position, imgWidth, imgHeight);
     heightLeft -= pageHeight;
 
     while (heightLeft > 0)
     {
-        position = heightLeft - imgHeight;
+       position = margin + (heightLeft - imgHeight);
 
-        pdf.addPage();
+pdf.addPage();
 
-        pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-
+pdf.addImage(imgData, "PNG", margin, position, imgWidth, imgHeight);
         heightLeft -= pageHeight;
     }
 
