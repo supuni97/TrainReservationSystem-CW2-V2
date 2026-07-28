@@ -1,6 +1,4 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.EntityFrameworkCore;
-using TrainReservationSystem.Data;
 using TrainReservationSystem.Services;
 using TrainReservationSystem.Services.Api;
 

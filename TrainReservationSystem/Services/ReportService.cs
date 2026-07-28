@@ -1,5 +1,3 @@
-using Microsoft.EntityFrameworkCore;
-using TrainReservationSystem.Data;
 using TrainReservationSystem.Models.ViewModels;
 using TrainReservationSystem.Services.Api;
 
@@ -7,15 +5,15 @@ namespace TrainReservationSystem.Services;
 
 public class ReportService
 {
-    private readonly ApplicationDbContext _context;
     private readonly IBookingApiService _bookingApiService;
+    private readonly ISpecialRequestApiService _specialRequestApiService;
 
     public ReportService(
-        ApplicationDbContext context,
-        IBookingApiService bookingApiService)
+        IBookingApiService bookingApiService,
+        ISpecialRequestApiService specialRequestApiService)
     {
-        _context = context;
         _bookingApiService = bookingApiService;
+        _specialRequestApiService = specialRequestApiService;
     }
 
     public async Task<WeeklyReportViewModel> GetWeeklyReportAsync(DateTime selectedDate)
@@ -34,10 +32,7 @@ public class ReportService
             GeneratedOn = DateTime.Now
         };
 
-        // ============================
-        // Get Bookings from Booking API
-        // ============================
-
+        // Get bookings from Booking API
         var allBookings = await _bookingApiService.GetAll();
 
         var weeklyBookings = allBookings
@@ -48,26 +43,21 @@ public class ReportService
             .ToList();
 
         report.TotalBookings = weeklyBookings.Count;
-
         report.TotalRevenue = weeklyBookings.Sum(b => b.TicketPrice);
 
-        // ============================
-        // Get Special Requests locally
-        // ============================
+        // Get special requests from Special Request API
+        var allRequests = await _specialRequestApiService.GetAll();
 
-        var weeklyRequests = await _context.SpecialRequests
+        var weeklyRequests = allRequests
             .Where(r =>
                 r.RequestDate.Date >= weekStart &&
                 r.RequestDate.Date <= weekEnd)
             .OrderBy(r => r.RequestDate)
-            .ToListAsync();
+            .ToList();
 
         report.TotalSpecialRequests = weeklyRequests.Count;
 
-        // ============================
         // Daily Breakdown
-        // ============================
-
         for (int i = 0; i < 7; i++)
         {
             DateTime currentDate = weekStart.AddDays(i);
@@ -75,27 +65,21 @@ public class ReportService
             report.Days.Add(new DailyReportViewModel
             {
                 DayName = currentDate.ToString("dddd"),
-
                 Date = currentDate,
 
                 Bookings = weeklyBookings
-                    .Where(b =>
-                        b.TravelDate.Date == currentDate.Date)
+                    .Where(b => b.TravelDate.Date == currentDate.Date)
                     .OrderBy(b => b.DepartureTime)
                     .ToList(),
 
                 SpecialRequests = weeklyRequests
-                    .Where(r =>
-                        r.RequestDate.Date == currentDate.Date)
+                    .Where(r => r.RequestDate.Date == currentDate.Date)
                     .OrderBy(r => r.RequestType)
                     .ToList()
             });
         }
 
-        // ============================
         // Insights
-        // ============================
-
         var busiest = report.Days
             .OrderByDescending(d => d.Bookings.Count)
             .FirstOrDefault();
