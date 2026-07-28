@@ -1336,375 +1336,152 @@ const fileName =
         : `WeeklyReport_${weekStart}.pdf`;
 
 pdf.save(fileName);
-
+}
 
 /* =========================
    CHART DATA
 ========================= */
 
+document.addEventListener("DOMContentLoaded", function () {
 
-const bookingLabels=[
+   const bookingLabels = [
+@Html.Raw(string.Join(",", Model.Days.Select(d => $"'{d.DayName}'")))
+];
 
-@foreach(var day in Model.Days)
-{
-    @Html.Raw($"'{day.DayName}',")
-}
+const bookingData = [
+@Html.Raw(string.Join(",", Model.Days.Select(d => d.Bookings.Count)))
+];
 
+const requestData = [
+@Html.Raw(string.Join(",", Model.Days.Select(d => d.SpecialRequests.Count)))
 ];
 
 
-
-
-const bookingData=[
-
-@foreach(var day in Model.Days)
-{
-    @Html.Raw($"{day.Bookings.Count},")
-}
-
-];
-
-
-
-
-const requestData=[
-
-@foreach(var day in Model.Days)
-{
-    @Html.Raw($"{day.SpecialRequests.Count},")
-}
-
-];
-
-
-
-
-
-
-/* =========================
-   BOOKING CHART
-========================= */
-
-
-const bookingCanvas =
-document.getElementById("bookingChart");
-
-
-
-if(bookingCanvas)
-{
-
-
-new Chart(
-bookingCanvas,
-{
-
-
-type:"bar",
-
-
-data:{
-
-
-labels:bookingLabels,
-
-
-datasets:[{
-
-
-label:"Bookings",
-
-data:bookingData,
-
-
-backgroundColor:"#0d6efd",
-
-
-borderRadius:8,
-
-
-borderSkipped:false
-
-
-}]
-
-
-
-},
-
-
-
-options:{
-
-
-responsive:true,
-
-
-maintainAspectRatio:false,
-
-
-
-plugins:{
-
-
-legend:{
-
-
-position:"bottom"
-
-
-},
-
-
-
-tooltip:{
-
-
-backgroundColor:"#0B3D91",
-
-padding:12
-
-
-}
-
-
-
-},
-
-
-
-
-scales:{
-
-
-x:{
-
-
-grid:{
-
-
-display:false
-
-
-}
-
-
-
-},
-
-
-
-y:{
-
-
-beginAtZero:true,
-
-
-ticks:{
-
-
-precision:0
-
-
-}
-
-
-
-}
-
-
-
-}
-
-
-
-}
-
-
-}
-
-
-);
-
-
-
-}
-
-
-
-
-
-
-
-
-
-/* =========================
-   SPECIAL REQUEST CHART
-========================= */
-
-
-const requestCanvas =
-document.getElementById("requestChart");
-
-
-
-if(requestCanvas)
-{
-
-
-new Chart(
-
-requestCanvas,
-
-{
-
-
-type:"line",
-
-
-data:{
-
-
-labels:bookingLabels,
-
-
-datasets:[{
-
-
-label:"Special Requests",
-
-
-data:requestData,
-
-
-borderColor:"#198754",
-
-
-backgroundColor:
-"rgba(25,135,84,.15)",
-
-
-fill:true,
-
-
-tension:.35,
-
-
-pointRadius:5,
-
-
-pointHoverRadius:7
-
-
-
-}]
-
-
-
-},
-
-
-
-
-options:{
-
-
-responsive:true,
-
-
-maintainAspectRatio:false,
-
-
-
-plugins:{
-
-
-legend:{
-
-
-position:"bottom"
-
-
-},
-
-
-
-tooltip:{
-
-
-backgroundColor:"#198754",
-
-padding:12
-
-
-}
-
-
-
-},
-
-
-
-scales:{
-
-
-
-x:{
-
-
-grid:{
-
-
-display:false
-
-
-}
-
-
-
-},
-
-
-
-y:{
-
-
-beginAtZero:true,
-
-
-ticks:{
-
-
-precision:0
-
-
-}
-
-
-
-}
-
-
-
-}
-
-
-
-}
-
-
-
-}
-
-
-);
-
-
-
-}
-
+    /* =========================
+       BOOKING CHART
+    ========================= */
+
+console.log("Chart loaded:", typeof Chart);
+console.log("Labels:", bookingLabels);
+console.log("Bookings:", bookingData);
+console.log("Requests:", requestData);
+
+    const bookingCanvas = document.getElementById("bookingChart");
+
+    if (bookingCanvas) {
+
+        new Chart(bookingCanvas, {
+
+            type: "bar",
+
+            data: {
+                labels: bookingLabels,
+                datasets: [{
+                    label: "Bookings",
+                    data: bookingData,
+                    backgroundColor: "#0d6efd",
+                    borderRadius: 8,
+                    borderSkipped: false
+                }]
+            },
+
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+
+                plugins: {
+                    legend: {
+                        position: "bottom"
+                    },
+                    tooltip: {
+                        backgroundColor: "#0B3D91",
+                        padding: 12
+                    }
+                },
+
+                scales: {
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    },
+
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            precision: 0
+                        }
+                    }
+                }
+            }
+
+        });
+
+    }
+
+
+    /* =========================
+       SPECIAL REQUEST CHART
+    ========================= */
+
+    const requestCanvas = document.getElementById("requestChart");
+
+    if (requestCanvas) {
+
+        new Chart(requestCanvas, {
+
+            type: "line",
+
+            data: {
+                labels: bookingLabels,
+                datasets: [{
+                    label: "Special Requests",
+                    data: requestData,
+                    borderColor: "#198754",
+                    backgroundColor: "rgba(25,135,84,.15)",
+                    fill: true,
+                    tension: .35,
+                    pointRadius: 5,
+                    pointHoverRadius: 7
+                }]
+            },
+
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+
+                plugins: {
+                    legend: {
+                        position: "bottom"
+                    },
+                    tooltip: {
+                        backgroundColor: "#198754",
+                        padding: 12
+                    }
+                },
+
+                scales: {
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    },
+
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            precision: 0
+                        }
+                    }
+                }
+            }
+
+        });
+
+    }
+    
+
+});
 
 </script>
-
-
 }
